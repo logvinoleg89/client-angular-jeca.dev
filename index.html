@@ -31,24 +31,10 @@
 </p>
 <![endif]-->
 
-<!--<div class="navbar navbar-default" role="navigation" bs-navbar>
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" ui-sref="/"">AppLogo</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <a ui-sref="state1.list">1111111111111111</a>
-            <li data-match-route="post/published"><a ui-sref="post/published">Post (Published)</a></li>
-            <li data-match-route="post/draft"><a ui-sref="post/draft">Post (Draft)</a></li>
-            <li ui-sref="login"></li>
-        </ul>
-    </div>
-</div>-->
-
 <div class="navbar navbar-default" role="navigation" bs-navbar>
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" ui-sref="/"">AppLogo</a>
+            <a class="navbar-brand" href="/">AppLogo</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a ui-sref="post/published">Post (Published)</a></li>
@@ -58,17 +44,14 @@
     </div>
 </div>
 
-<div class="container">
-    <div ui-view></div>
+<div class="container view-animate-container">
+    <div ui-view class="am-fade-and-slide-top">
+    </div>
 </div>
 
 <toaster-container toaster-options="{'position-class': 'toast-top-right'}"></toaster-container>
 
-
-
-
 <script src="vendor/angular/angular.js"></script>
-
 <script src="vendor/angular-i18n/angular-locale_ru.js"></script>
 <script src="vendor/angular-route/angular-route.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>

@@ -11,7 +11,7 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function ($
     $stateProvider
         // главная, состояние и вид ========================================
         .state('/', {
-            url: '/',
+            url: '',
             templateUrl: modulesPath + '/site/views/main.html'
         })
         .state('post/published', {

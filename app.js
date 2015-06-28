@@ -1,24 +1,29 @@
-var app = angular.module('myApp', ['ui.router', 'ngRoute', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
+var app = angular.module('myApp', ['ui.router', 'oc.lazyLoad', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
 
-
-//document.write('<script src="/modules/post/controllers/PostCtrl.js"><\/script>');
-
-app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function ($httpProvider, $stateProvider, $urlRouterProvider) {
+app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$locationProvider' ,
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $locationProvider) {
     var modulesPath = 'modules';
+    
+    $urlRouterProvider.otherwise("/");
+    $locationProvider.hashPrefix('!');
 
-
-    $urlRouterProvider.otherwise('/');
     $stateProvider
-        // главная, состояние и вид ========================================
         .state('/', {
             url: '',
             templateUrl: modulesPath + '/site/views/main.html'
         })
         .state('post/published', {
             url: '/post/published',
-            templateUrl: modulesPath + '/post/views/index.html',
-            controller: 'PostIndex',
+            views: {
+                "lazyLoadView": {
+                    controller: 'PostIndex', // This view will use AppCtrl loaded below in the resolve
+                    templateUrl: modulesPath + '/post/views/index.html'
+                }
+            },
             resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
+                }],
                 status: function () {
                     return 2;
                 }
@@ -29,25 +34,13 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function ($
             templateUrl: modulesPath + '/post/views/index.html',
             controller: 'PostIndex',
             resolve: {
-                app: function ($q, $rootScope){
-                    var deferred = $q.defer();
-                    
-                    require ([
-//                        'http://client-angular-jeca.dev/modules/post/controllers/PostCtrl.js',
-                    ], function () {
-                        $rootScope.$apply(function () {
-                           deferred.resolve();
-                        });
-                    });
-                    
-                     return deferred.promise;
-                },
                 status: function () {
                     return 1;
                 }
             }
         })
         .state('login', {
+            url: '/login',
             templateUrl: modulesPath + '/site/views/login.html',
             controller: 'SiteLogin'
         });
@@ -138,8 +131,7 @@ app.factory('authInterceptor', function ($q, $window) {
 app.value('app-version', '0.0.3');
 
 // Need set url REST Api in controller!
-app.service('rest', function ($http, $location, $routeParams) {
-
+app.service('rest', function ($http, $location, $stateParams) {
     return {
 
 //        baseUrl: 'http://yii2-rest-githubjeka.c9.io/rest/web/',
@@ -152,10 +144,10 @@ app.service('rest', function ($http, $location, $routeParams) {
         },
 
         model: function () {
-            if ($routeParams.expand != null) {
-                return $http.get(this.baseUrl + this.path + "/" + $routeParams.id + '?expand=' + $routeParams.expand);
+            if ($stateParams.expand != null) {
+                return $http.get(this.baseUrl + this.path + "/" + $stateParams.id + '?expand=' + $stateParams.expand);
             }
-            return $http.get(this.baseUrl + this.path + "/" + $routeParams.id);
+            return $http.get(this.baseUrl + this.path + "/" + $stateParams.id);
         },
 
         get: function () {
@@ -167,7 +159,7 @@ app.service('rest', function ($http, $location, $routeParams) {
         },
 
         putModel: function (model) {
-            return $http.put(this.baseUrl + this.path + "/" + $routeParams.id, model);
+            return $http.put(this.baseUrl + this.path + "/" + $stateParams.id, model);
         },
 
         deleteModel: function () {

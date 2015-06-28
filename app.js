@@ -29,6 +29,19 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function ($
             templateUrl: modulesPath + '/post/views/index.html',
             controller: 'PostIndex',
             resolve: {
+                app: function ($q, $rootScope){
+                    var deferred = $q.defer();
+                    
+                    require ([
+//                        'http://client-angular-jeca.dev/modules/post/controllers/PostCtrl.js',
+                    ], function () {
+                        $rootScope.$apply(function () {
+                           deferred.resolve();
+                        });
+                    });
+                    
+                     return deferred.promise;
+                },
                 status: function () {
                     return 1;
                 }

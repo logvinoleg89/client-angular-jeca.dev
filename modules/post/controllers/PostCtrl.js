@@ -1,6 +1,8 @@
 app
     .controller('PostIndex', ['$scope', 'rest', 'toaster', '$sce', 'status', '$filter', function ($scope, rest, toaster, $sce, status, $filter) {
 
+        $scope.testVar = 'TEST VAR';
+
         rest.path = 'v1/posts';
 
         var errorCallback = function (data) {

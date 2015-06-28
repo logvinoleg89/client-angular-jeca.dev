@@ -12,6 +12,8 @@
     "angular-strap": "~2.2",
     "bootstrap": "~3.3",
     "AngularJS-Toaster": "~0.4",
-    "angular-load": "~0.2.0"
+    "angular-load": "~0.2.0",
+    "requirejs-text": "2.0.x",
+    "requirejs": "2.1.x"
   }
 }

@@ -1,57 +1,21 @@
-var app = angular.module('myApp', ['angularLoad', 'ngRoute', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
+var app = angular.module('myApp', ['ui.router', 'ngRoute', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
 
 
 //document.write('<script src="/modules/post/controllers/PostCtrl.js"><\/script>');
 
-app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($locationProvider, $routeProvider, $httpProvider) {
+app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function ($httpProvider, $stateProvider, $urlRouterProvider) {
     var modulesPath = 'modules';
 
-    
-        function loadScript(url, callback)
-        {
-            // Adding the script tag to the head as suggested before
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
 
-            // Then bind the event to the callback function.
-            // There are several events for cross browser compatibility.
-            script.onreadystatechange = callback;
-            script.onload = callback;
-
-            // Fire the loading
-            head.appendChild(script);
-        }
-    
-        loadScript("/modules/post/controllers/PostCtrl.js", function(){
-//            angular.element(document).ready(function() {
-//                angular.bootstrap(document, ['myApp']);
-//            });
-        } );
-    
-    
-//alert();
-
-//        setTimeout(function (){
-            
-        
-
-
-    $routeProvider
-    
-    
-
-        .when('/', {
+    $urlRouterProvider.otherwise('/');
+    $stateProvider
+        // главная, состояние и вид ========================================
+        .state('/', {
+            url: '/',
             templateUrl: modulesPath + '/site/views/main.html'
         })
-
-        .when('/login', {
-            templateUrl: modulesPath + '/site/views/login.html',
-            controller: 'SiteLogin'
-        })
-
-        .when('/post/published', {
+        .state('post/published', {
+            url: '/post/published',
             templateUrl: modulesPath + '/post/views/index.html',
             controller: 'PostIndex',
             resolve: {
@@ -60,8 +24,8 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($l
                 }
             }
         })
-
-        .when('/post/draft', {
+        .state('post/draft', {
+            url: '/post/draft',
             templateUrl: modulesPath + '/post/views/index.html',
             controller: 'PostIndex',
             resolve: {
@@ -70,39 +34,74 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($l
                 }
             }
         })
-
-        .when('/post/create', {
-            templateUrl: modulesPath + '/post/views/form.html',
-            controller: 'PostCreate'
-        })
-
-        .when('/post/:id/edit', {
-            templateUrl: modulesPath + '/post/views/form.html',
-            controller: 'PostEdit'
-        })
-
-        .when('/post/:id/delete', {
-            templateUrl: modulesPath + '/post/views/delete.html',
-            controller: 'PostDelete'
-        })
-
-        .when('/post/:id', {
-            templateUrl: modulesPath + '/post/views/view.html',
-            controller: 'PostView'
-        })
-
-        .when('/404', {
-            templateUrl: '404.html'
-        })
-
-        .otherwise({redirectTo: '/404'})
-    ;
-//            console.log($routeProvider);
-//},0);
-//console.log($routeProvider);
-    $locationProvider.html5Mode(true).hashPrefix('!');
-    $httpProvider.interceptors.push('authInterceptor');
+        .state('login', {
+            templateUrl: modulesPath + '/site/views/login.html',
+            controller: 'SiteLogin'
+        });
 }]);
+
+//app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($locationProvider, $routeProvider, $httpProvider) {
+//    var modulesPath = 'modules';
+//
+//    $routeProvider
+//        .when('/', {
+//            templateUrl: modulesPath + '/site/views/main.html'
+//        })
+//
+//        .when('/login', {
+//            templateUrl: modulesPath + '/site/views/login.html',
+//            controller: 'SiteLogin'
+//        })
+//
+//        .when('/post/published', {
+//            templateUrl: modulesPath + '/post/views/index.html',
+//            controller: 'PostIndex',
+//            resolve: {
+//                status: function () {
+//                    return 2;
+//                }
+//            }
+//        })
+//
+//        .when('/post/draft', {
+//            templateUrl: modulesPath + '/post/views/index.html',
+//            controller: 'PostIndex',
+//            resolve: {
+//                status: function () {
+//                    return 1;
+//                }
+//            }
+//        })
+//
+//        .when('/post/create', {
+//            templateUrl: modulesPath + '/post/views/form.html',
+//            controller: 'PostCreate'
+//        })
+//
+//        .when('/post/:id/edit', {
+//            templateUrl: modulesPath + '/post/views/form.html',
+//            controller: 'PostEdit'
+//        })
+//
+//        .when('/post/:id/delete', {
+//            templateUrl: modulesPath + '/post/views/delete.html',
+//            controller: 'PostDelete'
+//        })
+//
+//        .when('/post/:id', {
+//            templateUrl: modulesPath + '/post/views/view.html',
+//            controller: 'PostView'
+//        })
+//
+//        .when('/404', {
+//            templateUrl: '404.html'
+//        })
+//
+//        .otherwise({redirectTo: '/404'})
+//    ;
+//    $locationProvider.html5Mode(true).hashPrefix('!');
+//    $httpProvider.interceptors.push('authInterceptor');
+//}]);
 
 app.factory('authInterceptor', function ($q, $window) {
     return {

@@ -1,4 +1,4 @@
-app
+angular.module('myApp')
     .controller('SiteLogin', ['$scope', 'rest', 'toaster', '$window', function ($scope, rest, toaster, $window) {
 
         rest.path = 'v1/user/login';

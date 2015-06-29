@@ -1,25 +1,35 @@
 var app = angular.module('myApp', ['ui.router', 'oc.lazyLoad', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
 
-app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$locationProvider' ,
+app.config([
+    '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$locationProvider' ,
     function ($httpProvider, $stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $locationProvider) {
+        
     var modulesPath = 'modules';
-    
+
     $urlRouterProvider.otherwise("/");
     $locationProvider.hashPrefix('!');
 
     $stateProvider
         .state('/', {
-            url: '',
+            url: '/',
             templateUrl: modulesPath + '/site/views/main.html'
         })
-        .state('post/published', {
+
+        .state('/login', {
+            url: '/login',
+            templateUrl: modulesPath + '/site/views/login.html',
+            controller: 'SiteLogin',
+            resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/site/controllers/SiteCtrl.js');
+                }]
+            }
+        })
+
+        .state('/post/published', {
             url: '/post/published',
-            views: {
-                "lazyLoadView": {
-                    controller: 'PostIndex', // This view will use AppCtrl loaded below in the resolve
-                    templateUrl: modulesPath + '/post/views/index.html'
-                }
-            },
+            templateUrl: modulesPath + '/post/views/index.html',
+            controller: 'PostIndex',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
@@ -29,85 +39,68 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ocLazyLoa
                 }
             }
         })
-        .state('post/draft', {
+
+        .state('/post/draft', {
             url: '/post/draft',
             templateUrl: modulesPath + '/post/views/index.html',
             controller: 'PostIndex',
             resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
+                }],
                 status: function () {
                     return 1;
                 }
             }
         })
-        .state('login', {
-            url: '/login',
-            templateUrl: modulesPath + '/site/views/login.html',
-            controller: 'SiteLogin'
-        });
-}]);
 
-//app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($locationProvider, $routeProvider, $httpProvider) {
-//    var modulesPath = 'modules';
-//
-//    $routeProvider
-//        .when('/', {
-//            templateUrl: modulesPath + '/site/views/main.html'
-//        })
-//
-//        .when('/login', {
-//            templateUrl: modulesPath + '/site/views/login.html',
-//            controller: 'SiteLogin'
-//        })
-//
-//        .when('/post/published', {
-//            templateUrl: modulesPath + '/post/views/index.html',
-//            controller: 'PostIndex',
-//            resolve: {
-//                status: function () {
-//                    return 2;
-//                }
-//            }
-//        })
-//
-//        .when('/post/draft', {
-//            templateUrl: modulesPath + '/post/views/index.html',
-//            controller: 'PostIndex',
-//            resolve: {
-//                status: function () {
-//                    return 1;
-//                }
-//            }
-//        })
-//
-//        .when('/post/create', {
-//            templateUrl: modulesPath + '/post/views/form.html',
-//            controller: 'PostCreate'
-//        })
-//
-//        .when('/post/:id/edit', {
-//            templateUrl: modulesPath + '/post/views/form.html',
-//            controller: 'PostEdit'
-//        })
-//
-//        .when('/post/:id/delete', {
-//            templateUrl: modulesPath + '/post/views/delete.html',
-//            controller: 'PostDelete'
-//        })
-//
-//        .when('/post/:id', {
-//            templateUrl: modulesPath + '/post/views/view.html',
-//            controller: 'PostView'
-//        })
-//
-//        .when('/404', {
-//            templateUrl: '404.html'
-//        })
-//
-//        .otherwise({redirectTo: '/404'})
-//    ;
-//    $locationProvider.html5Mode(true).hashPrefix('!');
-//    $httpProvider.interceptors.push('authInterceptor');
-//}]);
+        .state('/post/create', {
+            url: '/post/create',
+            templateUrl: modulesPath + '/post/views/form.html',
+            controller: 'PostCreate'
+        })
+
+        .state('/post/:id/edit', {
+            url: '/post/:id/edit',
+            templateUrl: modulesPath + '/post/views/form.html',
+            controller: 'PostEdit',
+            resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
+                }]
+            }
+        })
+
+        .state('/post/:id/delete', {
+            url: '/post/:id/delete',
+            templateUrl: modulesPath + '/post/views/delete.html',
+            controller: 'PostDelete',
+            resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
+                }]
+            }
+        })
+
+        .state('/post/:id', {
+            url: '/post/:id',
+            templateUrl: modulesPath + '/post/views/view.html',
+            controller: 'PostView',
+            resolve: {
+                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load('modules/post/controllers/PostCtrl.js');
+                }]
+            }
+        })
+
+        .state('/404', {
+            url: '/404',
+            templateUrl: '404.html'
+        })
+    ;
+    $locationProvider.html5Mode(true).hashPrefix('!');
+    $httpProvider.interceptors.push('authInterceptor');
+}]);
 
 app.factory('authInterceptor', function ($q, $window) {
     return {

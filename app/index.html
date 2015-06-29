@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!--<html ng-app="myApp">-->
-<html ng-app="app">
+<html ng-app="myApp">
+<!--<html ng-app="app">-->
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -23,91 +23,61 @@
         }
     </style>
 </head>
-<body class="ng-cloak" style="overflow-y: scroll">
-    
-<!--[if lte IE 9]>
-<p class="browsehappy">
-    Похоже, вы используете <strong>устаревшую версию</strong> Internet Explorer. <a href="http://browsehappy.com/">Обновите
-    свой браузер</a>.
-</p>
-<![endif]-->
+    <body class="ng-cloak" style="overflow-y: scroll">
 
-<div class="navbar navbar-default" role="navigation" bs-navbar>
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">AppLogo</a>
+        <!--[if lte IE 9]>
+        <p class="browsehappy">
+            Похоже, вы используете <strong>устаревшую версию</strong> Internet Explorer. <a href="http://browsehappy.com/">Обновите
+            свой браузер</a>.
+        </p>
+        <![endif]-->
+
+        <div class="navbar navbar-default" role="navigation" bs-navbar>
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">AppLogo</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="/post/published">Post (Published)</a></li>
+                    <li><a ui-sref="/post/draft">Post (Draft)</a></li>
+                    <li><a ui-sref="/login">Login</a></li>
+                </ul>
+            </div>
         </div>
-        <ul class="nav navbar-nav">
-            <li><a ui-sref="/post/published">Post (Published)</a></li>
-            <li><a ui-sref="/post/draft">Post (Draft)</a></li>
-            <li><a ui-sref="/login">Login</a></li>
-        </ul>
-    </div>
-</div>
 
-<div class="container view-animate-container">
-    <!--<div ui-view="lazyLoadView" class="am-fade-and-slide-top">-->
-    <div ui-view class="am-fade-and-slide-top">
-    </div>
-</div>
+        <div class="container view-animate-container">
+            <!--<div ui-view="lazyLoadView" class="am-fade-and-slide-top">-->
+            <div ui-view></div>
+        </div>
 
-<toaster-container toaster-options="{'position-class': 'toast-top-right'}"></toaster-container>
+        <toaster-container toaster-options="{'position-class': 'toast-top-right'}"></toaster-container>
 
-<script type="text/javascript" src="vendor/es5-shim/es5-shim.js"></script>
-<script type="text/javascript" src="vendor/lodash/dist/lodash.compat.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="vendor/angular/angular.js"></script>
-<script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
-<script src="vendor/oclazyload/dist/ocLazyLoad.js"></script>
-<script src="vendor/angular-i18n/angular-locale_ru.js"></script>
-<script src="vendor/angular-sanitize/angular-sanitize.js"></script>
-<script src="vendor/angular-animate/angular-animate.min.js"></script>
-<script src="vendor/AngularJS-Toaster/toaster.js"></script>
-<script src="vendor/angular-strap/dist/angular-strap.js"></script>
-<script src="vendor/angular-strap/dist/angular-strap.tpl.min.js"></script>
+        <script type="text/javascript" src="vendor/es5-shim/es5-shim.js"></script>
+        <script type="text/javascript" src="vendor/lodash/dist/lodash.compat.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="vendor/angular/angular.js"></script>
+        <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="vendor/oclazyload/dist/ocLazyLoad.js"></script>
+        <script src="vendor/angular-i18n/angular-locale_ru.js"></script>
+        <script src="vendor/angular-sanitize/angular-sanitize.js"></script>
+        <script src="vendor/angular-animate/angular-animate.min.js"></script>
+        <script src="vendor/AngularJS-Toaster/toaster.js"></script>
+        <script src="vendor/angular-strap/dist/angular-strap.js"></script>
+        <script src="vendor/angular-strap/dist/angular-strap.tpl.min.js"></script>
+        <script src="js/app.js"></script>
 
+        <!-- route -->
+        <script src="js/common/config/route.js"></script>
 
+        <!-- services -->
+        <script src="js/common/services/rest.js"></script>
+        <script src="js/common/services/authInterceptor.js"></script>
 
+        <!-- directives -->
+        <script src="js/common/directives/login.js"></script>
 
-
-
-
-<script type="text/javascript" src="vendor/angular-sanitize/angular-sanitize.js"></script>
-<script type="text/javascript" src="vendor/angular-animate/angular-animate.js"></script>
-<script type="text/javascript" src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
-<script type="text/javascript" src="vendor/angular-svg-png/angular-svg-png.js"></script>
-
-
-
-
-<script src="js/app.js"></script>
-
-
-
-<script src="js/common/common.js"></script>
-<script src="js/common/config/config.js"></script>
-<script src="js/common/helpers/endsWith.js"></script>
-<script src="js/common/helpers/isSet.js"></script>
-<script src="js/common/services/mixins.js"></script>
-<script src="js/common/mixins/stateMixin.js"></script>
-<script src="js/common/mixins/templateUrlFormatMixin.js"></script>
-<script src="js/common/services/template.js"></script>
-
-
-<script src="js/home/home.js"></script>
-<script src="js/home/controllers/homeCtrl.js"></script>
-<script src="js/home/services/featuresResolver.js"></script>
-
-
-
-
-
-
-
-<!--<script src="js/start/start.js"></script>-->
-
-<!--<script src="modules/post/controllers/PostCtrl.js"></script>-->
-<!--<script src="modules/site/controllers/SiteCtrl.js"></script>-->
-
-</body>
+        <!-- filters -->
+        <script src="js/common/filters/checkmark.js"></script>
+        
+    </body>
 </html>

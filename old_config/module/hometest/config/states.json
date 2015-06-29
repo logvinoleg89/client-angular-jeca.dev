@@ -1,0 +1,13 @@
+{
+    "hometest": {
+        "path": "/hometest",
+        "url": "/hometest",
+        "templateUrl": "hometest.html",
+        "controller": "HometestCtrl",
+        "default": true,
+        "mixins": ["state"],
+        "resolve": {
+            "features": "featuresResolver"
+        }
+    }
+}

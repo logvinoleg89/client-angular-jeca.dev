@@ -1,6 +1,7 @@
 {
     "home": {
-        "path": "/",
+        "path": "/qwe",
+        "url": "/qwe",
         "templateUrl": "home.html",
         "controller": "HomeCtrl",
         "default": true,

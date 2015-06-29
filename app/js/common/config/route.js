@@ -31,8 +31,7 @@ angular.module('myApp').config([
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load([
-                        'PostModule',
-                        'js/post/controllers/test.js'
+                        'PostModule'
                     ]);
                 }],
                 status: function () {

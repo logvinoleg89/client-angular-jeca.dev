@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<!--<html ng-app="myApp">-->
+<html ng-app="app">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -52,7 +53,8 @@
 
 <toaster-container toaster-options="{'position-class': 'toast-top-right'}"></toaster-container>
 
-
+<script type="text/javascript" src="vendor/es5-shim/es5-shim.js"></script>
+<script type="text/javascript" src="vendor/lodash/dist/lodash.compat.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="vendor/angular/angular.js"></script>
 <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
@@ -63,7 +65,47 @@
 <script src="vendor/AngularJS-Toaster/toaster.js"></script>
 <script src="vendor/angular-strap/dist/angular-strap.js"></script>
 <script src="vendor/angular-strap/dist/angular-strap.tpl.min.js"></script>
+
+
+
+
+
+
+
+<script type="text/javascript" src="vendor/angular-sanitize/angular-sanitize.js"></script>
+<script type="text/javascript" src="vendor/angular-animate/angular-animate.js"></script>
+<script type="text/javascript" src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
+<script type="text/javascript" src="vendor/angular-svg-png/angular-svg-png.js"></script>
+
+
+
+
 <script src="js/app.js"></script>
+
+
+
+<script src="js/common/common.js"></script>
+<script src="js/common/config/config.js"></script>
+<script src="js/common/helpers/endsWith.js"></script>
+<script src="js/common/helpers/isSet.js"></script>
+<script src="js/common/services/mixins.js"></script>
+<script src="js/common/mixins/stateMixin.js"></script>
+<script src="js/common/mixins/templateUrlFormatMixin.js"></script>
+<script src="js/common/services/template.js"></script>
+
+
+<script src="js/home/home.js"></script>
+<script src="js/home/controllers/homeCtrl.js"></script>
+<script src="js/home/services/featuresResolver.js"></script>
+
+
+
+
+
+
+
+<!--<script src="js/start/start.js"></script>-->
+
 <!--<script src="modules/post/controllers/PostCtrl.js"></script>-->
 <!--<script src="modules/site/controllers/SiteCtrl.js"></script>-->
 

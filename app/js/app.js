@@ -1,180 +1,109 @@
-var app = angular.module('myApp', ['ui.router', 'oc.lazyLoad', 'ngAnimate', 'toaster', 'ngSanitize', 'mgcrea.ngStrap']);
+'use strict';
 
-app.config([
-    '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', '$locationProvider' ,
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $ocLazyLoadProvider, $locationProvider) {
-        
-    var modulesPath = 'js';
+/**
+ * Define all the modules and their dependencies here ... config/run phase is done in the <module_name>/<module_name>.js file.
+ */
+angular.module('app.common', []);
+angular.module('app.home', ['ui.router']);
 
-    $urlRouterProvider.otherwise("/");
-    $locationProvider.hashPrefix('!');
+angular.module('app', ['app.home', 'app.common', 'ngSanitize', 'ngAnimate', 'ui.router', 'svgPng'])
+    .value('version', '0.1')
+    .config(['config', '$httpProvider', '$stateProvider', '$urlRouterProvider', 'template',
+        function(config, $httpProvider, $stateProvider, $urlRouterProvider, template) {
+            var _states = config['states'], _defaultPath = '/',
+                _registerState = function(name, stateConfig) {
 
-    $stateProvider
-        .state('/', {
-            url: '/',
-            templateUrl: modulesPath + '/site/views/main.html'
-        })
+                    var resolve = {}, options, locals;
 
-        .state('/login', {
-            url: '/login',
-            templateUrl: modulesPath + '/site/views/login.html',
-            controller: 'SiteLogin',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/site/controllers/SiteCtrl.js');
-                }]
-            }
-        })
+                    // extension for our resolvers functionality
+                    if (typeof stateConfig.resolve !== 'undefined') {
+                        angular.forEach(stateConfig.resolve, function(value, key) {
+                            var resolveFn;
 
-        .state('/post/published', {
-            url: '/post/published',
-            templateUrl: modulesPath + '/post/views/index.html',
-            controller: 'PostIndex',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
-                }],
-                status: function () {
-                    return 2;
+                            // by default if only a string is given it will inject,
+                            // else if an object is given without inject property or the inject property is set to false
+                            // it will return the value property of the object
+                            if (typeof value === 'string' || (value.hasOwnProperty('inject') && value.inject === true)) {
+                                resolveFn = ['$injector', '$stateParams', function($injector, $stateParams) {
+                                    return $injector.get(value)($stateParams);
+                                }];
+                            } else {
+                                resolveFn = function() {
+                                    return value['value'];
+                                };
+                            }
+
+                            resolve[key] = resolveFn;
+                        });
+                    }
+
+                    options = {
+                        'stateName': name,
+                        'templateUrl': template.formatUrl(stateConfig.templateUrl, stateConfig.module),
+                        'url': stateConfig.path,
+                        'abstract': typeof stateConfig['abstract'] !== 'undefined' && stateConfig['abstract'] ? true : false,
+                        'strict': false,
+                        'resolve': resolve
+                    };
+
+                    // extension that will apply the mixins to the controller scope
+                    if (angular.isDefined(stateConfig.controller)) {
+                        locals = ['$scope', '$controller', 'mixins', '$stateParams'].concat(_.keys(resolve));
+                        options.controller = locals.concat(function($scope, $controller, mixins) {
+                            var i = 0, localsObj = {};
+
+                            for (;i < locals.length; i++) {
+                                localsObj[locals[i]] = arguments[i];
+                            }
+
+                            if (angular.isArray(stateConfig.mixins)) {
+                                mixins($scope, stateConfig.mixins);
+                            }
+
+                            $controller(stateConfig.controller, localsObj);
+                        });
+                    }
+
+                    // If views are defined pass them along as default in the UI-Router,
+                    // except also add the default templateUrl & controller as the logic
+                    // to be placed in the parent's unnamed ui-view.
+                    if (typeof stateConfig.views !== 'undefined') {
+                        var views = {
+                            '': {
+                                'templateUrl': options.templateUrl,
+                                'controller': options.controller
+                            }
+                        };
+                        delete(options.controller);
+                        delete(options.templateUrl);
+
+                        angular.forEach(stateConfig.views, function(view) {
+                            view.templateUrl = template.formatUrl(view.templateUrl, stateConfig.module);
+                        });
+                        views = angular.extend(views, stateConfig.views);
+                        options.views = views;
+                    }
+
+                    $stateProvider.state(name, options);
+                };
+
+            angular.forEach(_states, function(state, stateName) {
+                if (state['default']) {
+                    _defaultPath = state.path;
                 }
-            }
-        })
 
-        .state('/post/draft', {
-            url: '/post/draft',
-            templateUrl: modulesPath + '/post/views/index.html',
-            controller: 'PostIndex',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
-                }],
-                status: function () {
-                    return 1;
-                }
-            }
-        })
+                _registerState(stateName, state);
+            });
 
-        .state('/post/create', {
-            url: '/post/create',
-            templateUrl: modulesPath + '/post/views/form.html',
-            controller: 'PostCreate'
-        })
+            // Redirect all urls not associated to a recognized state to the root URL.
+            $urlRouterProvider
+                .otherwise(_defaultPath);
 
-        .state('/post/:id/edit', {
-            url: '/post/:id/edit',
-            templateUrl: modulesPath + '/post/views/form.html',
-            controller: 'PostEdit',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
-                }]
-            }
-        })
+        }])
+    .run(['$rootScope', 'mixins',
+        function($rootScope, mixins) {
 
-        .state('/post/:id/delete', {
-            url: '/post/:id/delete',
-            templateUrl: modulesPath + '/post/views/delete.html',
-            controller: 'PostDelete',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
-                }]
-            }
-        })
+            mixins($rootScope, 'templateUrlFormat');
 
-        .state('/post/:id', {
-            url: '/post/:id',
-            templateUrl: modulesPath + '/post/views/view.html',
-            controller: 'PostView',
-            resolve: {
-                lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
-                }]
-            }
-        })
+        }]);
 
-        .state('/404', {
-            url: '/404',
-            templateUrl: '404.html'
-        })
-    ;
-    $locationProvider.html5Mode(true).hashPrefix('!');
-    $httpProvider.interceptors.push('authInterceptor');
-}]);
-
-app.factory('authInterceptor', function ($q, $window) {
-    return {
-        request: function (config) {
-            if ($window.sessionStorage._auth && config.url.substring(0, 4) == 'http') {
-                config.params = {'access-token': $window.sessionStorage._auth};
-            }
-            return config;
-        },
-        responseError: function (rejection) {
-            if (rejection.status === 401) {
-                $window.setTimeout(function () {
-                    $window.location = '/#!/login';
-                }, 1000);
-            }
-            return $q.reject(rejection);
-        }
-    };
-});
-
-app.value('app-version', '0.0.3');
-
-// Need set url REST Api in controller!
-app.service('rest', function ($http, $location, $stateParams) {
-    return {
-
-//        baseUrl: 'http://yii2-rest-githubjeka.c9.io/rest/web/',
-        baseUrl: 'http://rest-jeca.net/rest/web/',
-//        baseUrl: 'http://angularjeka.net/rest/web/',
-        path: undefined,
-
-        models: function () {
-            return $http.get(this.baseUrl + this.path + location.search);
-        },
-
-        model: function () {
-            if ($stateParams.expand != null) {
-                return $http.get(this.baseUrl + this.path + "/" + $stateParams.id + '?expand=' + $stateParams.expand);
-            }
-            return $http.get(this.baseUrl + this.path + "/" + $stateParams.id);
-        },
-
-        get: function () {
-            return $http.get(this.baseUrl + this.path);
-        },
-
-        postModel: function (model) {
-            return $http.post(this.baseUrl + this.path, model);
-        },
-
-        putModel: function (model) {
-            return $http.put(this.baseUrl + this.path + "/" + $stateParams.id, model);
-        },
-
-        deleteModel: function () {
-            return $http.delete(this.baseUrl + this.path);
-        }
-    };
-
-});
-
-app
-    .directive('login', ['$http', function ($http) {
-        return {
-            transclude: true,
-            link: function (scope, element, attrs) {
-                scope.isGuest = window.sessionStorage._auth == undefined;
-            },
-
-            template: '<a href="login" ng-if="isGuest">Login</a>'
-        }
-    }])
-    .filter('checkmark', function () {
-        return function (input) {
-            return input ? '\u2713' : '\u2718';
-        };
-    });

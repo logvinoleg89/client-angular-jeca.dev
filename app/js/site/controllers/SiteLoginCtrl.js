@@ -4,6 +4,7 @@ angular.module('myApp')
         rest.path = 'v1/user/login';
 
         var errorCallback = function (data) {
+                    console.log(data);
             toaster.clear();
             delete $window.sessionStorage._auth;
             angular.forEach(data, function (error) {

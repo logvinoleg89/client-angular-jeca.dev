@@ -19,7 +19,9 @@ angular.module('myApp').config([
             controller: 'SiteLogin',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/site/controllers/SiteCtrl.js');
+                    return $ocLazyLoad.load([
+                        'SiteModule'
+                    ]);
                 }]
             }
         })
@@ -46,7 +48,9 @@ angular.module('myApp').config([
             controller: 'PostIndex',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
+                    return $ocLazyLoad.load([
+                        'PostModule'
+                    ]);
                 }],
                 status: function () {
                     return 1;
@@ -66,7 +70,9 @@ angular.module('myApp').config([
             controller: 'PostEdit',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
+                    return $ocLazyLoad.load([
+                        'PostModule'
+                    ]);
                 }]
             }
         })
@@ -77,7 +83,9 @@ angular.module('myApp').config([
             controller: 'PostDelete',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
+                    return $ocLazyLoad.load([
+                        'PostModule'
+                    ]);
                 }]
             }
         })
@@ -88,7 +96,9 @@ angular.module('myApp').config([
             controller: 'PostView',
             resolve: {
                 lazy: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load(modulesPath + '/post/controllers/PostCtrl.js');
+                    return $ocLazyLoad.load([
+                        'PostModule'
+                    ]);
                 }]
             }
         })

@@ -2,8 +2,6 @@
 angular.module('myApp').service('rest', function ($http, $location, $stateParams) {
     return {
 
-//        baseUrl: 'http://yii2-rest-githubjeka.c9.io/rest/web/',
-//        baseUrl: 'http://angularjeka.net/rest/web/',
         baseUrl: 'http://rest-jeca.net/rest/web/',
         path: undefined,
 
